@@ -1,20 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from "react";
+import { Text, View, StyleSheet, TouchableNativeFeedback, StatusBar } from "react-native";
 
-export default function App() {
+const App = () => {
+  const [rippleColor, setRippleColor] = useState(randomHexColor());
+  const [rippleOverflow, setRippleOverflow] = useState(false);
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <TouchableNativeFeedback
+        onPress={() => {
+          setRippleColor(randomHexColor());
+          setRippleOverflow(!rippleOverflow);
+        }}
+        background={TouchableNativeFeedback.Ripple(rippleColor, rippleOverflow)}
+      >
+        <View style={styles.touchable}>
+          <Text style={styles.text}>TouchableNativeFeedback</Text>
+        </View>
+      </TouchableNativeFeedback>
     </View>
   );
-}
+};
+
+const randomHexColor = () => {
+  return "#000000".replace(/0/g, function() {
+    return (~~(Math.random() * 16)).toString(16);
+  });
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: "center",
+    paddingTop: StatusBar.currentHeight,
+    backgroundColor: "#ecf0f1",
+    padding: 8
   },
+  touchable: { flex: 0.5, borderColor: "black", borderWidth: 1 },
+  text: { alignSelf: "center" }
 });
+
+export default App;
